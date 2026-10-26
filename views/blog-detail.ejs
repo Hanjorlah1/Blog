@@ -1,0 +1,12 @@
+<%- include("partials/header_viewing.ejs") %>
+  <main>
+    <div class="container detail-container">
+      <a href="/" class="back-btn">&larr; Back to Home</a>
+
+      <article class="blog-post-full">
+        <h1 class="post-title"><%= blog.title %></h1>
+        <div class="post-body"><%= blog.body %></div>
+      </article>
+    </div>
+  </main>
+<%- include("partials/footer_2.ejs") %>

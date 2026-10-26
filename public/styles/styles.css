@@ -1,4 +1,3 @@
-
 * {
   box-sizing: border-box;
 }
@@ -20,12 +19,14 @@ header {
   border-bottom-left-radius: 10px;
   border-bottom-right-radius: 10px;
   position: fixed;
+  top: 0;
+  left: 0;
   z-index: 100;
 }
 
 .cta-btn {
   padding: 10px 20px;
-  border: none;      
+  border: none;
   cursor: pointer;
   border-radius: 20px;
 }
@@ -37,36 +38,48 @@ header {
 .cta-btn-save {
   background-color: green;
 }
+
 .nav-logo {
   font-size: 20px;
   font-weight: 600;
   margin: 5px;
+  color: inherit;
+  text-decoration: none;
 }
 
+/* ---------- Home ---------- */
 .blog-container {
   padding-top: 100px;
   padding-left: 10px;
   padding-right: 10px;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
   justify-content: center;
+  gap: 15px;
+  flex-wrap: wrap;
 }
 
-.blog-img {
-  max-height: 200px;
-  max-width: 370px;
+.blog-link {
+  color: inherit;
+  text-decoration: none;
 }
 
 .blog {
   border-radius: 15px;
-border-top-left-radius: 15px;
-border-top-right-radius: 15px;
-object-fit: cover;
-overflow-x: hidden;
-background-color: #B2B7A7;
-box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12), 0 2px 4px rgba(0, 0, 0, 0.06);
+  overflow-x: hidden;
+  background-color: #B2B7A7;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12), 0 2px 4px rgba(0, 0, 0, 0.06);
+  padding: 10px;
+  padding-top: 20px;
+  width: 400px;
+  max-width: 100%;
+  flex-shrink: 0;
+  transition: transform 0.15s ease;
+}
 
+.blog:hover {
+  transform: translateY(-3px);
 }
 
 .blog-title {
@@ -78,8 +91,9 @@ box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12), 0 2px 4px rgba(0, 0, 0, 0.06);
   padding-left: 10px;
 }
 
-.editing-view-container{
-    padding-top: 80px;
+/* ---------- Editing ---------- */
+.editing-view-container {
+  padding-top: 80px;
   padding-left: 10px;
   padding-right: 10px;
   display: flex;
@@ -101,7 +115,7 @@ textarea {
 }
 
 #blogTitle {
-  padding: 10px 20px 10px 20px;
+  padding: 10px 20px;
   margin-bottom: 10px;
   background-color: transparent;
   font-size: 35px;
@@ -118,6 +132,58 @@ textarea {
   color: #22231f;
   font-size: 35px;
   font-weight: 700;
+}
+
+/* ---------- Blog detail ---------- */
+.detail-container {
+  max-width: 800px;
   margin: 0 auto;
-  padding: 10px auto 10px auto;
+  padding: 100px 20px 40px;
+}
+
+.back-btn {
+  display: inline-block;
+  margin-bottom: 20px;
+  text-decoration: none;
+  color: #f1f3ea;
+  font-weight: 600;
+  transition: color 0.2s ease;
+}
+
+.back-btn:hover {
+  color: #fff;
+}
+
+.blog-post-full {
+  background: #ffffff;
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.post-title {
+  font-size: 2.5rem;
+  margin-top: 0;
+  margin-bottom: 20px;
+  color: #111;
+  line-height: 1.2;
+  overflow-wrap: break-word;
+}
+
+.post-body {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: #333;
+  white-space: pre-wrap; /* keeps line breaks from the textarea */
+  overflow-wrap: break-word;
+}
+
+@media (max-width: 600px) {
+  .blog-post-full {
+    padding: 24px;
+  }
+
+  .post-title {
+    font-size: 1.8rem;
+  }
 }

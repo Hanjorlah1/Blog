@@ -1,11 +1,14 @@
-<%-include("partials/header_main.ejs") %>
+<%- include("partials/header_main.ejs") %>
   <main>
     <div class="container blog-container">
-    <div class="blog">
-      <img src="../img/Dice-game-1.png" alt="" class="blog-img">
-      <h3 class="blog-title">blog-title</h3>
-      <p class="blog-description">hehdjdnd djdjdnfhd djdhtbf djdhfbf difhthr difhtbt</p>
-    </div>
+      <% for (let i = 0; i < blogs.length; i++) { %>
+        <a href="/blog/<%= blogs[i].id %>" class="blog-link">
+          <div class="blog" id="<%= blogs[i].id %>">
+            <h3 class="blog-title"><%= blogs[i].title %></h3>
+            <p class="blog-description"><%= blogs[i].previewText %></p>
+          </div>
+        </a>
+      <% } %>
     </div>
   </main>
-<%-include("partials/footer.ejs") %>
+<%- include("partials/footer.ejs") %>

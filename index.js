@@ -10,6 +10,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const app = express();
 const port = 3002;
+let blogArrary = [];
 let blogId;
 let blogTitle;
 let blogBody;
@@ -18,7 +19,7 @@ app.use(express.static("public"));
 app.use(express.json());
 
 app.get("/", (req, res) => {
-  res.render("index.ejs");
+  res.render("index.ejs" , { blogs:blogArrary });
 });
 
 app.get("/new-blog", (req, res) => {
@@ -28,8 +29,30 @@ app.get("/new-blog", (req, res) => {
 
 app.post("/post-blog", (req, res) => {
   newBlogPoster(req.body);
-  res.sendStatus(200);
+  res.json({ success: true, redirectUrl: "/" });
 })
+
+
+app.delete("/remove-blog/:id", (req, res) => {
+  const idToDelete = Number(req.params.id);
+  
+  blogArrary = blogArrary.filter(blog => blog.id !== idToDelete);
+
+  res.json({ success: true, redirectUrl: "/" });
+});
+
+app.get("/blog/:id", (req, res) => {
+  const requestedId = Number(req.params.id); 
+  
+
+  const foundBlog = blogArrary.find(blog => blog.id === requestedId);
+
+  if (foundBlog) {
+    res.render("blog-detail.ejs", { blog: foundBlog });
+  } else {
+    res.status(404).send("Blog post not found!");
+  }
+});
 
 app.listen(port, () => {
   console.log(`running on: ${port}`);
@@ -47,15 +70,5 @@ function newBlogPoster(delivery) {
   console.log(`blog poster here`);
   blogId = delivery.id;
   console.log(blogId);
-  createAndStoreJSON(delivery);
-}
-
-async function createAndStoreJSON(toStore) {
-  try {
-    const jsonString = JSON.stringify(toStore, null, 2);
-    await fs.writeFile(`${blogId}.json`, jsonString, "utf-8");
-    console.log(`${blogId}.json saved successfully`);
-  } catch (error) {
-    console.log(`error creatin the json file:`, error);
-  }
+  blogArrary.push(delivery);
 }
