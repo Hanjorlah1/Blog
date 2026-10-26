@@ -15,6 +15,7 @@ let blogId;
 let blogTitle;
 let blogBody;
 
+app.use(bodyParser.urlencoded({extended:true }))
 app.use(express.static("public"));
 app.use(express.json());
 
@@ -32,6 +33,35 @@ app.post("/post-blog", (req, res) => {
   res.json({ success: true, redirectUrl: "/" });
 })
 
+app.get("/edit-blog/:id", (req, res) => {
+  const idToEdit =  Number(req.params.id);
+
+  const foundBlog = blogArrary.find(blog => blog.id === idToEdit);
+
+  if (foundBlog) {
+    res.render("blog.ejs", { blog: foundBlog });
+  }  else {
+    res.status(404).send("Blog post not found!");
+  }
+})
+
+app.put("/update-blog/:id", (req, res) => {
+  const id = Number(req.params.id);
+  const index = blogArrary.findIndex(blog => blog.id === id);
+
+  if (index === -1) {
+    return res.status(404).json({ success: false });
+  }
+
+  blogArrary[index] = {
+    ...blogArrary[index],
+    title: req.body.title,
+    body: req.body.body,
+    previewText: req.body.previewText
+  };
+
+  res.json({ success: true, redirectUrl: `/blog/${id}` });
+});
 
 app.delete("/remove-blog/:id", (req, res) => {
   const idToDelete = Number(req.params.id);

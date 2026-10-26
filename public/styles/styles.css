@@ -178,6 +178,10 @@ textarea {
   overflow-wrap: break-word;
 }
 
+.cta-btn-edit {
+  background-color: #e0b341;
+}
+
 @media (max-width: 600px) {
   .blog-post-full {
     padding: 24px;

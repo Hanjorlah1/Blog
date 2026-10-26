@@ -1,6 +1,19 @@
 <%- include("partials/header_editing.ejs") %>
   <div class="editing-view-container">
-    <textarea name="blog-title" id="blogTitle" rows="1" placeholder="Title"></textarea>
-    <textarea name="blog-description" id="blogDescription" rows="20" placeholder="Write your blog..."></textarea>
+    <% if (locals.blog) { %>
+         <textarea name="blog-title" id="blogTitle" rows="1" placeholder="Title"><%= blog.title %></textarea>
+    <% } else {%>
+          <textarea name="blog-title" id="blogTitle" rows="1" placeholder="Title"></textarea>
+      <% } %>
+
+
+
+
+      <% if (locals.blog) { %>
+            <textarea name="blog-description" id="blogDescription" rows="20" placeholder="Write your blog..."><%= blog.body %></textarea>
+      <% } else {%>
+        <textarea name="blog-description" id="blogDescription" rows="20" placeholder="Write your blog..."></textarea>
+        <% } %>
+
   </div>
 <%- include("partials/footer.ejs") %>

@@ -1,35 +1,44 @@
-// 1. Grab your elements safely
 const titleTextarea = document.getElementById("blogTitle");
 const descriptionTextarea = document.getElementById("blogDescription");
 const postBlogBtn = document.getElementById("postBlogBtn");
 
+function autoResize(el) {
+  el.style.height = "auto";
+  el.style.height = el.scrollHeight + "px";
+}
 
 if (postBlogBtn && titleTextarea && descriptionTextarea) {
-  
+  const pathSegments = window.location.pathname.split("/");
+  const isEditing = pathSegments.includes("edit-blog");
+  const editId = isEditing ? Number(pathSegments[pathSegments.length - 1]) : null;
+
+  // size the boxes to existing text (matters when editing)
+  autoResize(titleTextarea);
+  autoResize(descriptionTextarea);
+
   postBlogBtn.addEventListener("click", () => {
-    const blogUniqueId = Date.now();
     const titleData = titleTextarea.value.trim();
     const bodyData = descriptionTextarea.value.trim();
-    const previewTextData = bodyData.length > 40 
-      ? bodyData.slice(0, 40) + "..." 
-      : bodyData;
-    const blogData = {
-      id: blogUniqueId, 
-      title: titleData,
-      body: bodyData,
-      previewText: previewTextData
-    }
-    if (!blogData.title || !blogData.body) {
-      alert("Fill Out both title and body!");
+
+    if (!titleData || !bodyData) {
+      alert("Fill out both title and body!");
       return;
     }
-    sender(blogData);
+
+    const blogData = {
+      id: isEditing ? editId : Date.now(),
+      title: titleData,
+      body: bodyData,
+      previewText: bodyData.length > 40 ? bodyData.slice(0, 40) + "..." : bodyData
+    };
+
+    const endpoint = isEditing ? `/update-blog/${editId}` : "/post-blog";
+    const method = isEditing ? "PUT" : "POST";
+
+    sender(blogData, endpoint, method);
   });
 
-  titleTextarea.addEventListener('input', function () {
-    this.style.height = 'auto';
-    this.style.height = (this.scrollHeight) + 'px';
-  });
+  titleTextarea.addEventListener("input", () => autoResize(titleTextarea));
 
   titleTextarea.addEventListener("keydown", (e) => {
     if (e.key === "Enter") {
@@ -38,52 +47,25 @@ if (postBlogBtn && titleTextarea && descriptionTextarea) {
     }
   });
 
-  descriptionTextarea.addEventListener('input', function() {
-    this.style.height = 'auto';
-    this.style.height = (this.scrollHeight) + 'px';
-  });
+  descriptionTextarea.addEventListener("input", () => autoResize(descriptionTextarea));
 }
 
-// 3. Sender function (stays the same)
-async function sender(payload) {
+async function sender(payload, endpoint, method) {
   try {
-    const response = await fetch("/post-blog", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
+    const response = await fetch(endpoint, {
+      method,
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload)
     });
 
     const data = await response.json();
 
     if (response.ok && data.success) {
-      alert("successful!");
-      window.location.href = data.redirectUrl; 
+      window.location.href = data.redirectUrl;
     } else {
-      alert("failed");
+      alert("Failed to save blog.");
     }
   } catch (error) {
-    console.error(`net comms failed:`, error);
+    console.error("net comms failed:", error);
   }
-}
-
-// 4. Global Click Listener (Now safe because the script won't crash upstream!)
-document.addEventListener("click", (e) => {
-  const clickedBlog = e.target.closest(".blog");
-  
-  if (clickedBlog) {
-   
-    const blogId = clickedBlog.id;
-    if (blogId) {
-      blogFinder(blogId);
-    }
-  }
-});
-
-function blogFinder(id) {
-  console.log("Navigating to blog ID:", id);
-  
- 
-  window.location.href = `/blog/${id}`;
 }
