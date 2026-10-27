@@ -1,19 +1,10 @@
 import express from "express";
 import bodyParser, { json } from "body-parser";
-import { dirname } from "path";
-import { fileURLToPath } from "url";
-import path from "path";
-import fs from "fs/promises";
-import { writeFile, mkdir} from "fs/promises";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 const app = express();
 const port = 3002;
 let blogArrary = [];
 let blogId;
-let blogTitle;
-let blogBody;
 
 app.use(bodyParser.urlencoded({extended:true }))
 app.use(express.static("public"));
@@ -24,7 +15,6 @@ app.get("/", (req, res) => {
 });
 
 app.get("/new-blog", (req, res) => {
-  newBlogMaker();
   res.render("blog.ejs")
 })
 
@@ -91,10 +81,6 @@ app.listen(port, () => {
 
 
 
-
-function newBlogMaker() {
-  console.log(`active`);
-}
 
 function newBlogPoster(delivery) {
   console.log(`blog poster here`);
