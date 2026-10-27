@@ -1,6 +1,12 @@
 <%- include("partials/header_main.ejs") %>
   <main>
     <div class="container blog-container">
+      <% if (blogs.length === 0) { %>
+        <div class="empty-state">
+          <h2>No posts yet</h2>
+          <p>Hit “+ New Blog” to write your first one.</p>
+        </div>
+      <% } %>
       <% for (let i = 0; i < blogs.length; i++) { %>
         <a href="/blog/<%= blogs[i].id %>" class="blog-link">
           <div class="blog" id="<%= blogs[i].id %>">

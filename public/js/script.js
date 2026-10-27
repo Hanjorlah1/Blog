@@ -21,7 +21,9 @@ if (postBlogBtn && titleTextarea && descriptionTextarea) {
     const bodyData = descriptionTextarea.value.trim();
 
     if (!titleData || !bodyData) {
-      alert("Fill out both title and body!");
+      if (!titleData) flagInvalid(titleTextarea);
+      if (!bodyData) flagInvalid(descriptionTextarea);
+      showToast("Fill out both title and body!", "error");
       return;
     }
 
@@ -35,7 +37,7 @@ if (postBlogBtn && titleTextarea && descriptionTextarea) {
     const endpoint = isEditing ? `/update-blog/${editId}` : "/post-blog";
     const method = isEditing ? "PUT" : "POST";
 
-    sender(blogData, endpoint, method);
+    sender(blogData, endpoint, method, postBlogBtn);
   });
 
   titleTextarea.addEventListener("input", () => autoResize(titleTextarea));
@@ -50,7 +52,9 @@ if (postBlogBtn && titleTextarea && descriptionTextarea) {
   descriptionTextarea.addEventListener("input", () => autoResize(descriptionTextarea));
 }
 
-async function sender(payload, endpoint, method) {
+async function sender(payload, endpoint, method, btn) {
+  setLoading(btn, true);
+
   try {
     const response = await fetch(endpoint, {
       method,
@@ -63,9 +67,12 @@ async function sender(payload, endpoint, method) {
     if (response.ok && data.success) {
       window.location.href = data.redirectUrl;
     } else {
-      alert("Failed to save blog.");
+      showToast("Failed to save blog.", "error");
+      setLoading(btn, false);
     }
   } catch (error) {
     console.error("net comms failed:", error);
+    showToast("Couldn't reach the server.", "error");
+    setLoading(btn, false);
   }
 }
